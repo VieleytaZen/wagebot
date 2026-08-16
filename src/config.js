@@ -5,7 +5,7 @@ module.exports = {
     geminiApiKey: process.env.GEMINI_API_KEY,
 
     // Model Gemini yang digunakan
-    geminiModel: process.env.GEMINI_MODEL || 'gemini-1.5-flash',
+    geminiModel: process.env.GEMINI_MODEL || 'gemini-2.0-flash',
 
     // Nama bot (tampil di log)
     botName: process.env.BOT_NAME || 'Kodi - Jus Kode',
