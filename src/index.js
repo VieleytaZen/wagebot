@@ -121,7 +121,7 @@ client.on('message', async (msg) => {
                 `🤖 *Balasan Bot:* ${response.substring(0, 120)}...\n\n` +
                 `_Segera tindaklanjuti via WhatsApp._`;
             try {
-                await client.sendMessage(`${config.managerNumber}@c.us`, alertMsg);
+                await client.sendMessage(config.managerNumber, alertMsg);
                 console.log(`[Alert] Notifikasi pesanan dikirim ke manajer.`);
             } catch (_) {
                 console.warn('[Alert] Gagal kirim notifikasi ke manajer.');

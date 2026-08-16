@@ -5,16 +5,11 @@ const { updateProductStatus, getMenuReport, getUnavailableReport } = require('./
 
 /**
  * Cek apakah pengirim adalah owner.
- * Cocokkan dengan format @c.us dan @lid.
+ * Cocokkan langsung dengan full WhatsApp ID (misal: 83xxx@lid atau 628xxx@c.us)
  */
 function isOwner(msg) {
     if (!config.ownerNumber) return false;
-    const num = config.ownerNumber.replace(/\D/g, ''); // strip non-digit
-    return (
-        msg.from === `${num}@c.us` ||
-        msg.from.startsWith(`${num}@lid`) ||
-        msg.from.startsWith(num)
-    );
+    return msg.from === config.ownerNumber;
 }
 
 // ─── Handler Perintah ─────────────────────────────────────────────────────────
