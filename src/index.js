@@ -64,26 +64,31 @@ client.on('message', async (msg) => {
     console.log(`[Pesan] Dari ${userId}: ${userMessage}`);
 
     try {
-        // Kirim indikator "mengetik..." — dibungkus sendiri karena bisa
-        // gagal pada kontak format @lid (Linked Device ID)
+        // Tandai pesan sudah dibaca
+        try { await msg.getChat().then(c => c.sendSeen()); } catch (_) {}
+
+        // Mulai indikator "mengetik..."
+        let chat = null;
         try {
             await client.sendPresenceAvailable();
-            const chat = await msg.getChat();
+            chat = await msg.getChat();
             await chat.sendStateTyping();
-        } catch (_) { /* abaikan jika typing indicator gagal */ }
+        } catch (_) { /* abaikan jika gagal pada kontak @lid */ }
 
-        // Dapatkan respons dari Gemini (dengan memory)
+        // Ambil respons dari Groq (proses berlangsung selama "mengetik")
         const response = await getGeminiResponse(userId, userMessage);
 
-        // Hentikan indikator mengetik & balas pesan
-        try {
-            const chat = await msg.getChat();
-            await chat.clearState();
-        } catch (_) { /* abaikan */ }
+        // Hitung delay mengetik yang realistis berdasarkan panjang respons
+        // ~180 kata/menit = kecepatan mengetik manusia normal
+        const wordCount  = response.trim().split(/\s+/).length;
+        const typingMs   = Math.min(Math.max((wordCount / 180) * 60_000, 1000), 6000);
+        await new Promise(resolve => setTimeout(resolve, typingMs));
 
+        // Hentikan indikator mengetik & kirim balasan
+        try { if (chat) await chat.clearState(); } catch (_) {}
         await msg.reply(response);
 
-        console.log(`[Balas] Ke ${userId}: ${response.substring(0, 80)}...`);
+        console.log(`[Balas] Ke ${userId} (delay: ${typingMs}ms): ${response.substring(0, 80)}...`);
     } catch (err) {
         const errMsg = err?.message || err?.toString() || JSON.stringify(err);
         console.error(`[Error] Gagal memproses pesan dari ${userId}:`, errMsg);
