@@ -1,6 +1,7 @@
 const Groq = require('groq-sdk');
 const config = require('./config');
-const { SYSTEM_PROMPT } = require('./prompt');
+const { buildSystemPrompt } = require('./prompt');
+const { getCatalogString }  = require('./catalog');
 const { loadHistory, saveHistory } = require('./memory');
 
 const groq = new Groq({ apiKey: config.groqApiKey });
@@ -17,9 +18,12 @@ async function getGeminiResponse(userId, message) {
     // Load history percakapan user dari file
     const history = loadHistory(userId);
 
+    // Bangun system prompt dengan data katalog terkini (minified JSON)
+    const systemPrompt = buildSystemPrompt(getCatalogString());
+
     // Susun messages: system prompt + history + pesan baru
     const messages = [
-        { role: 'system', content: SYSTEM_PROMPT },
+        { role: 'system', content: systemPrompt },
         ...history,
         { role: 'user', content: message },
     ];

@@ -1,0 +1,121 @@
+{
+  "brand": "Jus Kode",
+  "tagline": "Minuman Jus Segar Berkualitas Tinggi",
+
+  "contact": {
+    "whatsapp": "628xxxxxxxxx",
+    "instagram": "@juskode",
+    "email": "hello@juskode.com"
+  },
+
+  "jam_operasional": {
+    "hari": "Senin - Minggu",
+    "buka": "10:00",
+    "tutup": "24:00"
+  },
+
+  "cara_pesan": {
+    "metode": ["WhatsApp", "DM Instagram"],
+    "pembayaran": ["Transfer Bank BCA/BRI/Mandiri", "QRIS", "cash"],
+    "pengiriman": ["ambil ditempat"]
+  },
+
+  "menu": {
+    "Makanan": [
+      { "nama": "Roti Bakar Coklat", "harga": 17000 },
+      { "nama": "Roti Bakar Keju", "harga": 17000 },
+      { "nama": "Roti Bakar Srikaya", "harga": 17000 },
+      { "nama": "Roti Bakar Coklat Keju", "harga": 20000 },
+      { "nama": "Roti Bakar Kornet Telur", "harga": 24000 },
+      { "nama": "Roti Bakar Es Krim", "harga": 24000 },
+      { "nama": "Indomie Goreng", "harga": 12000 },
+      { "nama": "Indomie Goreng Double", "harga": 18000 },
+      { "nama": "Indomie Soto", "harga": 12000 },
+      { "nama": "Indomie Soto Double", "harga": 18000 },
+      { "nama": "Indomie Ayam Bawang", "harga": 12000 },
+      { "nama": "Indomie Ayam Bawang Double", "harga": 18000 },
+      { "nama": "Singkong Goreng", "harga": 15000 },
+      { "nama": "Kentang Goreng", "harga": 18000 },
+      { "nama": "Otak-Otak Goreng", "harga": 17000 },
+      { "nama": "Seblak", "harga": 17000 },
+      { "nama": "Baso Aci", "harga": 17000 },
+      { "nama": "Cireng Goreng", "harga": 17000 },
+      { "nama": "Piscok Goreng", "harga": 17000 },
+      { "nama": "Fishroll", "harga": 17000 },
+      { "nama": "Miniwonton", "harga": 17000 },
+      { "nama": "Pisang Coklat Goreng", "harga": 17000 },
+      { "nama": "Es Campur Jelly", "harga": 17000 },
+      { "nama": "Stik Keju Goreng", "harga": 17000, "status": "Tidak Tersedia" }
+    ],
+    "Minuman Besar": [
+      { "nama": "Djoes Alpukat Besar", "harga": 20000 },
+      { "nama": "Djoes Jambu Besar", "harga": 17000 },
+      { "nama": "Djoes Sirsak Besar", "harga": 17000 },
+      { "nama": "Djoes Mangga Besar", "harga": 17000 },
+      { "nama": "Djoes Melon Besar", "harga": 17000 },
+      { "nama": "Djoes Pisang Besar", "harga": 17000 },
+      { "nama": "Djoes Wortel Besar", "harga": 17000 },
+      { "nama": "Djoes Buah Naga Besar", "harga": 17000 },
+      { "nama": "Djoes Stroberi Besar", "harga": 17000 },
+      { "nama": "Djoes Mix Beri Besar", "harga": 27000 },
+      { "nama": "Djoes Nanas Besar", "harga": 17000 },
+      { "nama": "Djoes Markisa Besar", "harga": 17000 },
+      { "nama": "Djoes Kombinasi Besar (Pilih 2 Buah)", "harga": 17000 },
+      { "nama": "Es Jeruk", "harga": 17000 }
+    ],
+    "Minuman Kecil": [
+      { "nama": "Djoes Alpukat Kecil", "harga": 17000 },
+      { "nama": "Djoes Jambu Kecil", "harga": 14000 },
+      { "nama": "Djoes Sirsak Kecil", "harga": 14000 },
+      { "nama": "Djoes Mangga Kecil", "harga": 14000 },
+      { "nama": "Djoes Melon Kecil", "harga": 14000 },
+      { "nama": "Djoes Pisang Kecil", "harga": 14000 },
+      { "nama": "Djoes Wortel Kecil", "harga": 14000 },
+      { "nama": "Djoes Buah Naga Kecil", "harga": 14000 },
+      { "nama": "Djoes Stroberi Kecil", "harga": 14000 },
+      { "nama": "Djoes Mix Beri Kecil", "harga": 22000 },
+      { "nama": "Djoes Nanas Kecil", "harga": 14000 },
+      { "nama": "Djoes Markisa Kecil", "harga": 14000 },
+      { "nama": "Es Jeruk Nipis", "harga": 18000 },
+      { "nama": "Korean Banana Milk & Cup Kecil", "harga": 8000 },
+      { "nama": "Banoffee & Cup Kecil", "harga": 10000 },
+      { "nama": "Es Jeruk Sonkit", "harga": 18000, "status": "Tidak Tersedia" }
+    ],
+    "Super Jus": [
+      { "nama": "Jus Anti Kanker (Bit, Nanas, Apel)", "harga": 25000 },
+      { "nama": "Jus Diabetes (Pir, Apel, Stroberi)", "harga": 25000 },
+      { "nama": "Jus Jantung (Stroberi, Pisang, Tomat)", "harga": 25000 },
+      { "nama": "Jus Kolesterol (Nanas, Jeruk, Bayam, Timun)", "harga": 25000 },
+      { "nama": "Jus Mata (Wortel, Stroberi, Melon)", "harga": 25000 },
+      { "nama": "Jus Radang (Jeruk, Apel, Bayam)", "harga": 25000 }
+    ],
+    "Yoghurt Series": [
+      { "nama": "Yoghurt Cookies & Cup Kecil (Coklat)", "harga": 29000 },
+      { "nama": "Yoghurt Cosmic & Cup Kecil (Blueberry)", "harga": 29000 },
+      { "nama": "Yoghurt Ocean & Cup Kecil (Biru)", "harga": 29000 },
+      { "nama": "Yoghurt Paradise & Cup Kecil (Merah)", "harga": 29000 }
+    ],
+    "Whey Series": [
+      { "nama": "Whey Coklat & Cup Kecil", "harga": 29000 },
+      { "nama": "Whey Stroberi & Cup Kecil", "harga": 25000 }
+    ],
+    "Es Kotjok Series": [
+      { "nama": "Es Alpukat Kotjok & Cup Kecil", "harga": 25000 },
+      { "nama": "Es Naga Kotjok & Cup Kecil", "harga": 25000 }
+    ],
+    "Milkshake Series": [
+      { "nama": "Milkshake Coklat & Cup Kecil", "harga": 25000 },
+      { "nama": "Milkshake Stroberi & Cup Kecil", "harga": 25000 }
+    ],
+    "Wedang Series": [
+      { "nama": "Wedang Uwuh Original", "harga": 13000 },
+      { "nama": "Wedang Uwuh Susu", "harga": 15000 }
+    ]
+  },
+
+  "catatan": [
+    "Item dengan status 'Tidak Tersedia' sedang tidak dijual saat ini",
+    "Harga dapat berubah sewaktu-waktu",
+    "Informasikan jika ada pertanyaan lebih lanjut"
+  ]
+}
