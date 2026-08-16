@@ -1,10 +1,18 @@
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 const { getGeminiResponse } = require('./gemini');
+const { isOwner, handleOwnerCommand } = require('./owner');
 const config = require('./config');
 
 // Map untuk cooldown per user (anti-spam)
 const cooldowns = new Map();
+
+// Map untuk cooldown alert order per user (hindari spam notif ke manajer)
+const alertCooldowns = new Map();
+const ALERT_COOLDOWN_MS = 5 * 60 * 1000; // 5 menit
+
+// Pattern deteksi intent memesan
+const ORDER_PATTERN = /\b(pesan|mesen|order|mau beli|mau ambil|cara pesan|cara order|bisa pesan)\b/i;
 
 const client = new Client({
     authStrategy: new LocalAuth(),
@@ -63,6 +71,17 @@ client.on('message', async (msg) => {
 
     console.log(`[Pesan] Dari ${userId}: ${userMessage}`);
 
+    // ── Routing: Owner command ─────────────────────────────────────────────────
+    if (isOwner(msg) && userMessage.startsWith('/')) {
+        try {
+            await handleOwnerCommand(msg, client);
+        } catch (err) {
+            console.error('[Owner] Error saat proses perintah:', err.message);
+            await msg.reply('❌ Terjadi error saat memproses perintah.');
+        }
+        return;
+    }
+
     try {
         // Tandai pesan sudah dibaca
         try { await msg.getChat().then(c => c.sendSeen()); } catch (_) {}
@@ -87,6 +106,27 @@ client.on('message', async (msg) => {
         // Hentikan indikator mengetik & kirim balasan
         try { if (chat) await chat.clearState(); } catch (_) {}
         await msg.reply(response);
+
+        // ── Order Alert ke Manajer ─────────────────────────────────────────────
+        const hasOrderIntent = ORDER_PATTERN.test(userMessage);
+        const lastAlert = alertCooldowns.get(userId) || 0;
+        const alertReady = Date.now() - lastAlert > ALERT_COOLDOWN_MS;
+
+        if (hasOrderIntent && config.managerNumber && alertReady) {
+            alertCooldowns.set(userId, Date.now());
+            const alertMsg =
+                `🔔 *NOTIFIKASI PESANAN*\n\n` +
+                `👤 *Pelanggan:* ${userId.split('@')[0]}\n` +
+                `💬 *Pesan:* ${userMessage}\n` +
+                `🤖 *Balasan Bot:* ${response.substring(0, 120)}...\n\n` +
+                `_Segera tindaklanjuti via WhatsApp._`;
+            try {
+                await client.sendMessage(`${config.managerNumber}@c.us`, alertMsg);
+                console.log(`[Alert] Notifikasi pesanan dikirim ke manajer.`);
+            } catch (_) {
+                console.warn('[Alert] Gagal kirim notifikasi ke manajer.');
+            }
+        }
 
         console.log(`[Balas] Ke ${userId} (delay: ${typingMs}ms): ${response.substring(0, 80)}...`);
     } catch (err) {

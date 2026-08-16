@@ -4,6 +4,12 @@ module.exports = {
     // Groq API
     groqApiKey: process.env.GROQ_API_KEY,
 
+    // Nomor owner (bisa kelola stok via WA) — format: 628xxx tanpa +
+    ownerNumber: process.env.OWNER_NUMBER || '',
+
+    // Nomor manajer (terima notifikasi pesanan) — format: 628xxx tanpa +
+    managerNumber: process.env.MANAGER_NUMBER || '',
+
     // Model Groq yang digunakan
     // Pilihan: llama-3.3-70b-versatile, llama-3.1-8b-instant, mixtral-8x7b-32768
     groqModel: process.env.GROQ_MODEL || 'llama-3.3-70b-versatile',
