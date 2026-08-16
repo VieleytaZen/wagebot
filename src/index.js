@@ -64,16 +64,23 @@ client.on('message', async (msg) => {
     console.log(`[Pesan] Dari ${userId}: ${userMessage}`);
 
     try {
-        // Kirim indikator "mengetik..." agar terasa responsif
-        await client.sendPresenceAvailable();
-        const chat = await msg.getChat();
-        await chat.sendStateTyping();
+        // Kirim indikator "mengetik..." — dibungkus sendiri karena bisa
+        // gagal pada kontak format @lid (Linked Device ID)
+        try {
+            await client.sendPresenceAvailable();
+            const chat = await msg.getChat();
+            await chat.sendStateTyping();
+        } catch (_) { /* abaikan jika typing indicator gagal */ }
 
         // Dapatkan respons dari Gemini (dengan memory)
         const response = await getGeminiResponse(userId, userMessage);
 
         // Hentikan indikator mengetik & balas pesan
-        await chat.clearState();
+        try {
+            const chat = await msg.getChat();
+            await chat.clearState();
+        } catch (_) { /* abaikan */ }
+
         await msg.reply(response);
 
         console.log(`[Balas] Ke ${userId}: ${response.substring(0, 80)}...`);
