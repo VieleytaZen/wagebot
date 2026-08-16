@@ -78,7 +78,9 @@ client.on('message', async (msg) => {
 
         console.log(`[Balas] Ke ${userId}: ${response.substring(0, 80)}...`);
     } catch (err) {
-        console.error(`[Error] Gagal memproses pesan dari ${userId}:`, err.message);
+        const errMsg = err?.message || err?.toString() || JSON.stringify(err);
+        console.error(`[Error] Gagal memproses pesan dari ${userId}:`, errMsg);
+        console.error(`[Error] Detail:`, err);
         await msg.reply('Maaf, saya sedang mengalami gangguan teknis. Mohon coba lagi dalam beberapa saat ya! 🙏');
     }
 });
