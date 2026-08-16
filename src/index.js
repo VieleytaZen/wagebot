@@ -105,7 +105,23 @@ client.on('message', async (msg) => {
 
         // Hentikan indikator mengetik & kirim balasan
         try { if (chat) await chat.clearState(); } catch (_) {}
-        await msg.reply(response);
+
+        // Untuk kontak @lid: resolve nomor asli lewat getContact() lalu kirim ke @c.us
+        // Ini menghindari bug whatsapp-web.js di mana msg.reply() silent-fail pada @lid
+        let sent = false;
+        if (userId.endsWith('@lid')) {
+            try {
+                const contact = await msg.getContact();
+                if (contact?.number) {
+                    await client.sendMessage(`${contact.number}@c.us`, response);
+                    sent = true;
+                    console.log(`[Debug] Kirim via @c.us: ${contact.number}@c.us`);
+                }
+            } catch (e) {
+                console.warn('[Debug] getContact gagal, fallback ke msg.reply:', e.message);
+            }
+        }
+        if (!sent) await msg.reply(response);
 
         // ── Order Alert ke Manajer ─────────────────────────────────────────────
         const hasOrderIntent = ORDER_PATTERN.test(userMessage);
