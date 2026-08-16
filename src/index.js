@@ -104,9 +104,8 @@ client.on('message', async (msg) => {
         await new Promise(resolve => setTimeout(resolve, typingMs));
 
         // Hentikan indikator mengetik & kirim balasan
-        // Pakai client.sendMessage() agar kompatibel dengan @lid
         try { if (chat) await chat.clearState(); } catch (_) {}
-        await client.sendMessage(msg.from, response);
+        await msg.reply(response);
 
         // ── Order Alert ke Manajer ─────────────────────────────────────────────
         const hasOrderIntent = ORDER_PATTERN.test(userMessage);
@@ -134,7 +133,7 @@ client.on('message', async (msg) => {
         const errMsg = err?.message || err?.toString() || JSON.stringify(err);
         console.error(`[Error] Gagal memproses pesan dari ${userId}:`, errMsg);
         console.error(`[Error] Detail:`, err);
-        await client.sendMessage(msg.from, 'Maaf, saya sedang mengalami gangguan teknis. Mohon coba lagi dalam beberapa saat ya! 🙏');
+        await msg.reply('Maaf, saya sedang mengalami gangguan teknis. Mohon coba lagi dalam beberapa saat ya! 🙏');
     }
 });
 
