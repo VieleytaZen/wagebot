@@ -1,9 +1,9 @@
-const { GoogleGenerativeAI } = require('@google/generative-ai');
+const { GoogleGenAI } = require('@google/genai');
 const config = require('./config');
 const { SYSTEM_PROMPT } = require('./prompt');
 const { loadHistory, saveHistory } = require('./memory');
 
-const genAI = new GoogleGenerativeAI(config.geminiApiKey);
+const ai = new GoogleGenAI({ apiKey: config.geminiApiKey });
 
 /**
  * Kirim pesan ke Gemini dengan context history percakapan user.
@@ -17,18 +17,22 @@ async function getGeminiResponse(userId, message) {
     // Load history percakapan user dari file
     const history = loadHistory(userId);
 
-    // Buat model dengan system instruction (persona Kodi)
-    const model = genAI.getGenerativeModel({
+    // Gabungkan history + pesan baru sebagai contents
+    const contents = [
+        ...history,
+        { role: 'user', parts: [{ text: message }] },
+    ];
+
+    // Kirim ke Gemini dengan system instruction (persona Kodi)
+    const response = await ai.models.generateContent({
         model: config.geminiModel,
-        systemInstruction: SYSTEM_PROMPT,
+        contents,
+        config: {
+            systemInstruction: SYSTEM_PROMPT,
+        },
     });
 
-    // Mulai sesi chat dengan history yang ada
-    const chat = model.startChat({ history });
-
-    // Kirim pesan dan tunggu balasan
-    const result = await chat.sendMessage(message);
-    const responseText = result.response.text();
+    const responseText = response.text;
 
     // Update history: tambahkan giliran user + model yang baru
     const updatedHistory = [
@@ -37,8 +41,14 @@ async function getGeminiResponse(userId, message) {
         { role: 'model', parts: [{ text: responseText }] },
     ];
 
+    // Potong history jika melebihi batas maxHistory
+    const maxPairs = config.maxHistory;
+    const trimmed = updatedHistory.length > maxPairs
+        ? updatedHistory.slice(updatedHistory.length - maxPairs)
+        : updatedHistory;
+
     // Simpan history kembali ke file
-    saveHistory(userId, updatedHistory);
+    saveHistory(userId, trimmed);
 
     return responseText;
 }
