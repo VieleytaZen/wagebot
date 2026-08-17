@@ -4,6 +4,22 @@ const { getGeminiResponse } = require('./gemini');
 const { getUserRole, handlePanelCommand } = require('./panel');
 const config = require('./config');
 
+// Inisialisasi Groq Client
+const Groq = require('groq-sdk');
+const groq = new Groq({ apiKey: config.groqApiKey });
+
+// Ambil daftar model Groq saat bot menyala agar kita tahu mana yang aktif
+(async () => {
+    try {
+        const models = await groq.models.list();
+        const activeModels = models.data.map(m => m.id);
+        console.log('[Info] Model Groq yang tersedia di akun ini:');
+        console.log(activeModels.join(', '));
+    } catch (err) {
+        console.warn('[Peringatan] Gagal mengambil daftar model Groq:', err.message);
+    }
+})();
+
 // Map untuk cooldown per user (anti-spam)
 const cooldowns = new Map();
 
