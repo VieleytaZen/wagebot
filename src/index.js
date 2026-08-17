@@ -106,22 +106,17 @@ client.on('message', async (msg) => {
         // Mulai indikator "mengetik..."
         let chat = null;
         try {
-            await client.sendPresenceAvailable();
             chat = await msg.getChat();
             await chat.sendStateTyping();
-        } catch (_) { /* abaikan jika gagal pada kontak @lid */ }
+        } catch (e) { 
+            console.warn('[Debug] Gagal memicu status mengetik:', e.message);
+        }
 
-        // Ambil respons dari Groq (proses berlangsung selama "mengetik")
+        // Ambil respons dari AI (proses berlangsung selama status "mengetik")
         const response = await getGroqResponse(userId, userMessage);
 
-        // Hitung delay mengetik yang realistis berdasarkan panjang respons
-        // ~180 kata/menit = kecepatan mengetik manusia normal
-        const wordCount  = response.trim().split(/\s+/).length;
-        const typingMs   = Math.min(Math.max((wordCount / 180) * 60_000, 1000), 6000);
-        await new Promise(resolve => setTimeout(resolve, typingMs));
-
-        // Hentikan indikator mengetik & kirim balasan
-        try { if (chat) await chat.clearState(); } catch (_) {}
+        // Delay kecil agar tidak terlalu instan (waktu tunggu API sudah memberikan delay natural)
+        await new Promise(resolve => setTimeout(resolve, 500));
 
         // Untuk kontak @lid: resolve nomor asli lewat getContact() lalu kirim ke @c.us
         // Ini menghindari bug whatsapp-web.js di mana msg.reply() silent-fail pada @lid
