@@ -42,6 +42,11 @@ async function getGeminiResponse(userId, message) {
                     !m.id.includes('guard') && !m.id.includes('whisper') && !m.id.includes('vision')
                 );
                 
+                if (!activeModel) {
+                    console.log('[Debug] Semua model yang tersedia di API Groq saat ini:');
+                    console.log(modelsList.data.map(m => m.id).join(', '));
+                }
+                
                 if (activeModel) {
                     console.log(`[Info] Model alternatif ditemukan: ${activeModel.id}. Menggunakan model ini...`);
                     config.groqModel = activeModel.id; 
