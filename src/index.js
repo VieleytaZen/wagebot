@@ -28,7 +28,7 @@ const alertCooldowns = new Map();
 const ALERT_COOLDOWN_MS = 5 * 60 * 1000; // 5 menit
 
 // Pattern deteksi intent memesan
-const ORDER_PATTERN = /\b(pesan|mesen|order|mau beli|mau ambil|cara pesan|cara order|bisa pesan)\b/i;
+const ORDER_PATTERN = /\b(pesan|pesen|mesen|order|beli|mau beli|mau ambil|cara pesan|cara order|bisa pesan)\b/i;
 
 const client = new Client({
     authStrategy: new LocalAuth(),
@@ -126,21 +126,14 @@ client.on('message', async (msg) => {
         // Ini menghindari bug whatsapp-web.js di mana msg.reply() silent-fail pada @lid
         let sent = false;
         if (userId.endsWith('@lid')) {
-            console.log(`[Debug] Pesan dari @lid. Memeriksa data mentah...`);
-            console.log(`[Debug] msg.author:`, msg.author);
-            console.log(`[Debug] msg._data.author:`, msg._data?.author);
-            console.log(`[Debug] msg.id.participant:`, msg.id?.participant);
-            console.log(`[Debug] msg.id.remote:`, msg.id?.remote);
-            
             try {
                 const contact = await msg.getContact();
                 if (contact?.number) {
                     await client.sendMessage(`${contact.number}@c.us`, response);
                     sent = true;
-                    console.log(`[Debug] Kirim via @c.us: ${contact.number}@c.us`);
                 }
             } catch (e) {
-                console.warn('[Debug] getContact gagal, fallback ke msg.reply:', e.message);
+                // Abaikan error 'No LID for user', biarkan fallback ke msg.reply bekerja
             }
         }
         if (!sent) await msg.reply(response);
