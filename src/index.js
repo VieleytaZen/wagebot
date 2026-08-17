@@ -110,6 +110,12 @@ client.on('message', async (msg) => {
         // Ini menghindari bug whatsapp-web.js di mana msg.reply() silent-fail pada @lid
         let sent = false;
         if (userId.endsWith('@lid')) {
+            console.log(`[Debug] Pesan dari @lid. Memeriksa data mentah...`);
+            console.log(`[Debug] msg.author:`, msg.author);
+            console.log(`[Debug] msg._data.author:`, msg._data?.author);
+            console.log(`[Debug] msg.id.participant:`, msg.id?.participant);
+            console.log(`[Debug] msg.id.remote:`, msg.id?.remote);
+            
             try {
                 const contact = await msg.getContact();
                 if (contact?.number) {
