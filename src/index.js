@@ -170,7 +170,7 @@ client.on('message', async (msg) => {
             }
         }
 
-        console.log(`[Balas] Ke ${userId} (delay: ${typingMs}ms): ${response.substring(0, 80)}...`);
+        console.log(`[Balas] Ke ${userId}: ${response.substring(0, 80)}...`);
     } catch (err) {
         const errMsg = err?.message || err?.toString() || JSON.stringify(err);
         console.error(`[Error] Gagal memproses pesan dari ${userId}:`, errMsg);
