@@ -1,7 +1,7 @@
 {
-  "name": "whatsapp-gemini-bot",
+  "name": "whatsapp-groq-bot",
   "version": "1.0.0",
-  "description": "WhatsApp AI Assistant Jus Kode - Powered by Gemini AI",
+  "description": "WhatsApp AI Assistant Jus Kode - Powered by Groq AI",
   "main": "src/index.js",
   "engines": {
     "node": ">=18.0.0"

@@ -1,6 +1,6 @@
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
-const { getGeminiResponse } = require('./gemini');
+const { getGroqResponse } = require('./groq');
 const { getUserRole, handlePanelCommand } = require('./panel');
 const config = require('./config');
 
@@ -112,7 +112,7 @@ client.on('message', async (msg) => {
         } catch (_) { /* abaikan jika gagal pada kontak @lid */ }
 
         // Ambil respons dari Groq (proses berlangsung selama "mengetik")
-        const response = await getGeminiResponse(userId, userMessage);
+        const response = await getGroqResponse(userId, userMessage);
 
         // Hitung delay mengetik yang realistis berdasarkan panjang respons
         // ~180 kata/menit = kecepatan mengetik manusia normal

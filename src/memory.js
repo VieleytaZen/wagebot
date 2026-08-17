@@ -1,4 +1,4 @@
-﻿const fs = require('fs');
+const fs = require('fs');
 const path = require('path');
 const config = require('./config');
 
@@ -22,7 +22,7 @@ function getSessionPath(userId) {
 /**
  * Load history percakapan user dari file
  * @param {string} userId - ID WhatsApp user
- * @returns {Array} History dalam format Gemini [{role, parts}]
+ * @returns {Array} History dalam format Groq [{role, content}]
  */
 function loadHistory(userId) {
     const filePath = getSessionPath(userId);
@@ -41,7 +41,7 @@ function loadHistory(userId) {
 /**
  * Simpan history percakapan user ke file
  * @param {string} userId - ID WhatsApp user
- * @param {Array} history - History dalam format Gemini [{role, parts}]
+ * @param {Array} history - History dalam format Groq [{role, content}]
  */
 function saveHistory(userId, history) {
     const filePath = getSessionPath(userId);

@@ -39,7 +39,9 @@ ${catalogJson}
 - JANGAN membuat atau mengarang harga, produk, atau informasi yang tidak ada di data toko
 - JANGAN menjawab pertanyaan yang tidak berhubungan dengan Jus Kode secara mendalam
 - SELALU prioritaskan kepuasan dan kenyamanan pelanggan
-- Jaga profesionalitas, jangan bertingkah laku terlalu kasual atau kekanak-kanakan`;
+- Jaga profesionalitas, jangan bertingkah laku terlalu kasual atau kekanak-kanakan
+- JANGAN pernah menampilkan proses berpikir, alur pikir, reasoning, atau catatan internal dalam jawaban. Langsung berikan jawaban final yang bersih tanpa tag <think>, <reasoning>, atau penjelasan internal apapun
+- Jawaban harus langsung ke inti, bersih, dan siap dibaca pelanggan`;
 }
 
 module.exports = { buildSystemPrompt };

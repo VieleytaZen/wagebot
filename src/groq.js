@@ -14,7 +14,7 @@ const groq = new Groq({ apiKey: config.groqApiKey });
  * @param {string} message - Pesan teks dari user
  * @returns {Promise<string>} - Teks balasan dari Groq
  */
-async function getGeminiResponse(userId, message) {
+async function getGroqResponse(userId, message) {
     const history = loadHistory(userId);
     const systemPrompt = buildSystemPrompt(getCatalogString());
     
@@ -70,8 +70,17 @@ async function getGeminiResponse(userId, message) {
 
     let responseText = completion?.choices[0]?.message?.content || 'Maaf, saya tidak bisa merespons saat ini.';
 
-    // Bersihkan tag <think>...</think> (Chain of Thought) yang dihasilkan oleh beberapa model (seperti Qwen/DeepSeek)
-    responseText = responseText.replace(/<think>[\s\S]*?<\/think>\n*/gi, '').trim();
+    // ── Bersihkan Chain of Thought (CoT) dari berbagai model ────────────────
+    // 1. Tag <think>...</think> atau <reasoning>...</reasoning> dengan closing tag
+    responseText = responseText.replace(/<(think|reasoning|thought|reflection)>[\s\S]*?<\/\1>\s*/gi, '');
+    // 2. Tag <think> tanpa closing tag (model kadang lupa menutup) — hapus dari <think> sampai akhir blok atau seluruh sisa
+    responseText = responseText.replace(/<(think|reasoning|thought|reflection)>[\s\S]*/gi, '');
+    // 3. Markdown-style thinking headers (e.g. "**Thinking:**\n..." atau "**Alur Pikir:**\n...")
+    responseText = responseText.replace(/^\*{1,2}(Thinking|Reasoning|Alur Pikir|Proses Berpikir|Chain of Thought|Internal)[:\s]*\*{1,2}\s*\n[\s\S]*?(?=\n\*{1,2}[^*]|\n#{1,3}\s|\n---|\n\n[A-Z])/gi, '');
+    // 4. Blok yang dibungkus ``` dengan label think/reasoning
+    responseText = responseText.replace(/```(?:think|thinking|reasoning)[\s\S]*?```\s*/gi, '');
+    // 5. Bersihkan sisa whitespace berlebih
+    responseText = responseText.replace(/^\s*\n{3,}/gm, '\n\n').trim();
 
     const updatedHistory = [
         ...history,
@@ -83,4 +92,4 @@ async function getGeminiResponse(userId, message) {
     return responseText;
 }
 
-module.exports = { getGeminiResponse };
+module.exports = { getGroqResponse };
