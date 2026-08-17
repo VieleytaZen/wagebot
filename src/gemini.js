@@ -15,37 +15,60 @@ const groq = new Groq({ apiKey: config.groqApiKey });
  * @returns {Promise<string>} - Teks balasan dari Groq
  */
 async function getGeminiResponse(userId, message) {
-    // Load history percakapan user dari file
     const history = loadHistory(userId);
-
-    // Bangun system prompt dengan data katalog terkini (minified JSON)
     const systemPrompt = buildSystemPrompt(getCatalogString());
-
-    // Susun messages: system prompt + history + pesan baru
+    
     const messages = [
         { role: 'system', content: systemPrompt },
         ...history,
         { role: 'user', content: message },
     ];
 
-    // Kirim ke Groq dan tunggu balasan
-    const completion = await groq.chat.completions.create({
-        messages,
-        model: config.groqModel,
-        temperature: 0.7,
-        max_tokens: 1024,
-    });
+    let completion;
+    try {
+        completion = await groq.chat.completions.create({
+            messages,
+            model: config.groqModel,
+            temperature: 0.7,
+            max_tokens: 1024,
+        });
+    } catch (error) {
+        if (error.status === 400 || error.status === 404) {
+            console.warn(`[Peringatan] Model ${config.groqModel} bermasalah. Mencari model alternatif otomatis...`);
+            try {
+                const modelsList = await groq.models.list();
+                const activeModel = modelsList.data.find(m => 
+                    m.id.includes('llama') || m.id.includes('mixtral') || m.id.includes('gemma')
+                );
+                
+                if (activeModel) {
+                    console.log(`[Info] Model alternatif ditemukan: ${activeModel.id}. Menggunakan model ini...`);
+                    config.groqModel = activeModel.id; 
+                    
+                    completion = await groq.chat.completions.create({
+                        messages,
+                        model: activeModel.id,
+                        temperature: 0.7,
+                        max_tokens: 1024,
+                    });
+                } else {
+                    throw error;
+                }
+            } catch (fallbackErr) {
+                throw error;
+            }
+        } else {
+            throw error;
+        }
+    }
 
-    const responseText = completion.choices[0].message.content;
+    const responseText = completion?.choices[0]?.message?.content || 'Maaf, saya tidak bisa merespons saat ini.';
 
-    // Update history: tambahkan giliran user + assistant yang baru
     const updatedHistory = [
         ...history,
         { role: 'user',      content: message },
         { role: 'assistant', content: responseText },
     ];
-
-    // Simpan history kembali ke file (memory.js sudah handle trim)
     saveHistory(userId, updatedHistory);
 
     return responseText;
