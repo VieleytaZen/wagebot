@@ -38,7 +38,8 @@ async function getGeminiResponse(userId, message) {
             try {
                 const modelsList = await groq.models.list();
                 const activeModel = modelsList.data.find(m => 
-                    m.id.includes('llama') || m.id.includes('mixtral') || m.id.includes('gemma')
+                    (m.id.includes('llama') || m.id.includes('mixtral') || m.id.includes('gemma')) &&
+                    !m.id.includes('guard') && !m.id.includes('whisper') && !m.id.includes('vision')
                 );
                 
                 if (activeModel) {
