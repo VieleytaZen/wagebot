@@ -15,8 +15,8 @@ module.exports = {
     moderatorIds: (process.env.MODERATOR_IDS || '').split(',').map(id => id.trim()).filter(Boolean),
 
     // Model Groq yang digunakan
-    // Pilihan: llama3-8b-8192, llama3-70b-8192, mixtral-8x7b-32768
-    groqModel: process.env.GROQ_MODEL || 'llama3-8b-8192',
+    // Pilihan: qwen/qwen3.6-27b, openai/gpt-oss-20b, openai/gpt-oss-120b
+    groqModel: process.env.GROQ_MODEL || 'qwen/qwen3.6-27b',
 
     // Nama bot (tampil di log)
     botName: process.env.BOT_NAME || 'Kodi - Jus Kode',
