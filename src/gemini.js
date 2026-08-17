@@ -68,7 +68,10 @@ async function getGeminiResponse(userId, message) {
         }
     }
 
-    const responseText = completion?.choices[0]?.message?.content || 'Maaf, saya tidak bisa merespons saat ini.';
+    let responseText = completion?.choices[0]?.message?.content || 'Maaf, saya tidak bisa merespons saat ini.';
+
+    // Bersihkan tag <think>...</think> (Chain of Thought) yang dihasilkan oleh beberapa model (seperti Qwen/DeepSeek)
+    responseText = responseText.replace(/<think>[\s\S]*?<\/think>\n*/gi, '').trim();
 
     const updatedHistory = [
         ...history,
