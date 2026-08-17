@@ -106,10 +106,14 @@ client.on('message', async (msg) => {
         // Mulai indikator "mengetik..."
         let chat = null;
         try {
+            await client.sendPresenceAvailable(); // Penting agar bot terlihat online
             chat = await msg.getChat();
             await chat.sendStateTyping();
         } catch (e) { 
-            console.warn('[Debug] Gagal memicu status mengetik:', e.message);
+            // whatsapp-web.js sering gagal mengambil chat untuk kontak @lid (linked device / internal bisnis)
+            if (!userId.endsWith('@lid')) {
+                console.warn('[Debug] Gagal memicu status mengetik:', e.message);
+            }
         }
 
         // Ambil respons dari AI (proses berlangsung selama status "mengetik")
